@@ -2,7 +2,7 @@
   <div>
     <search-params :params="params" @delete="handleParamDelete"></search-params>
     <div>
-      <div><label><span v-show="currentMenuItem.label">{{currentMenuItem.label}}:</span><input ref="searchInput" @keyup.enter="handleInputEnter" @keyup.delete="handleInputDelete" @focus="handleInputFocus" v-model.trim="key"></label></div>
+      <div><label><span v-show="currentMenuItem.label">{{currentMenuItem.label}}:</span><input ref="searchInput" @keyup.enter="handleInputEnter" @keyup.delete="handleInputDelete" @focus="handleInputFocus" @blur="handleInputBlur" v-model.trim="key"></label></div>
       <search-menu :status="status === 'KEY_STATUS'" :data="currentMenuData" @select="handleMenuSelect"></search-menu>
     </div>
   </div>
@@ -63,6 +63,13 @@
         if (!this.key && this.currentMenuItem.name) {
           this.currentMenuItem = {}
         }
+      },
+      handleInputBlur () {
+        setTimeout(() => {
+          if (this.status !== VALUE_STATUS) {
+            this.status = BLUR_STATUS
+          }
+        }, 400)
       },
       handleMenuSelect (item) {
         this.currentMenuItem = {...item}
