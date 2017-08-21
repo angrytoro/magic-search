@@ -1,31 +1,18 @@
 <template>
-  <li @click="handleClick">{{label}}</li>
+  <li @click="handleClick">{{data.label}}</li>
 </template>
 
 <script>
   export default {
     props: {
-      name: {
-        type: String,
+      data: {
+        type: Object,
         required: true
-      },
-      label: {
-        type: String,
-        required: true
-      },
-      type: { // 搜索选项类型，默认text。可支持select,mult-select,datepicker
-        type: String,
-        default: 'text'
-      },
-      value: {
-        validator() {
-          return true;
-        }
       }
     },
     methods: {
-      handleClick() {
-        this.$emit('select', { name: this.name, type: this.type, value: this.value});
+      handleClick () {
+        this.$emit('select', {...this.data})
       }
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div v-for="(value, key) in params" :key="key">
-      <span>{{key}}:{{value}}</span>
+    <div v-for="(item, key) in params" :key="key">
+      <span>{{item.label}}:{{item.value}}</span>
       <span @click="handleDelete(key)">X</span>
     </div>
   </div>
@@ -16,8 +16,8 @@
       }
     },
     methods: {
-      handleDelete(key) {
-        this.$emit('delete', key);
+      handleDelete (key) {
+        this.$emit('delete', key)
       }
     }
   }

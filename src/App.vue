@@ -1,17 +1,48 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
-    <hello></hello>
+    <magic-search :menu-data="menuData"></magic-search>
   </div>
 </template>
 
 <script>
-import Hello from './components/Hello'
+import MagicSearch from './components/MagicSearch'
 
 export default {
   name: 'app',
   components: {
-    Hello
+    MagicSearch
+  },
+  data () {
+    return {
+      menuData: [
+        {
+          name: 'name',
+          label: '姓名',
+          type: 'text'
+        },
+        {
+          name: 'status',
+          label: '状态',
+          type: 'select'
+        },
+        {
+          name: 'visibility',
+          label: '是否可见',
+          type: 'select'
+        },
+        {
+          name: 'min',
+          label: '最小值',
+          type: 'text'
+        },
+        {
+          name: 'max',
+          label: '最大值',
+          type: 'text'
+        }
+      ]
+    }
   }
 }
 </script>
