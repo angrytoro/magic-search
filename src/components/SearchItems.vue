@@ -1,14 +1,14 @@
 <template>
   <ul v-show="status">
-    <item v-for="item in data" :data="item" @select="handleSelect" :key="item.name"></item>
+    <search-item v-for="item in data" :data="item" @select="handleSelect" :key="item.name"></search-item>
   </ul>
 </template>
 
 <script>
-  import MenuItem from './MenuItem'
+  import SearchItem from './SearchItem'
   export default {
     components: {
-      item: MenuItem
+      SearchItem
     },
     props: {
       data: {

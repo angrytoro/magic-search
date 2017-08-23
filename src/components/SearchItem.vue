@@ -7,7 +7,9 @@
     props: {
       data: {
         type: Object,
-        required: true
+        validator (value) {
+          return value && (!value.type || ['TEXT', 'SELECT', 'MULT-SELECT', 'DATE'].indexOf(value.type.toUpperCase()) > -1)
+        }
       }
     },
     methods: {

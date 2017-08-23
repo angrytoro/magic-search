@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
-    <magic-search :menu-data="menuData"></magic-search>
+    <magic-search :search-items="searchItems"></magic-search>
   </div>
 </template>
 
@@ -15,7 +15,7 @@ export default {
   },
   data () {
     return {
-      menuData: [
+      searchItems: [
         {
           name: 'name',
           label: '姓名',
