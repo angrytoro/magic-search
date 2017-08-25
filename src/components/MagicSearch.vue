@@ -53,7 +53,7 @@
       },
       handleInputEnter () {
         if (this.currentSearchItem.name && this.key) {
-          this.$set(this.params, this.currentSearchItem.name, {label: this.currentSearchItem.label, value: this.key})
+          this.$set(this.params, this.currentSearchItem.name, {label: this.currentSearchItem.label, value: this.key, diaplay_value: this.key})
           this.currentSearchItem = {}
           this.key = ''
           this.status = KEY_STATUS
@@ -69,7 +69,7 @@
           if (this.status !== VALUE_STATUS) {
             this.status = BLUR_STATUS
           }
-        }, 400)
+        }, 300)
       },
       handleSearchItemSelect (item) {
         this.currentSearchItem = {...item}
@@ -77,6 +77,9 @@
         this.status = VALUE_STATUS
         this.key = ''
         this.$refs.searchInput.focus()
+        // if (item.type.toUpperCase() === 'SELECT') {
+
+        // }
       }
     }
   }
