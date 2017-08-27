@@ -1,7 +1,12 @@
 <template>
-  <ul>
-    <Option v-for="(value, key) in data" :data="{'key': key, 'value': value}" @select="handleSelect"></Option>
-  </ul>
+  <div>
+    <ul>
+      <Option v-for="(value, key) in data" :data="{'key': key, 'value': value}" :mult="mult" :selected="isSelected(key)" @select="handleSelect" @unselect="handleUnselect"></Option>
+    </ul>
+    <div>
+      <button @click="handleConfirm">确认</button>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -14,11 +19,41 @@
       data: {
         type: Object,
         required: true
+      },
+      mult: { // 是否多选，默认不是多选
+        type: Boolean,
+        default: false
+      }
+    },
+    data () {
+      return {
+        selected: []// 多选的时候需要用到,数组里面的对象是{key: 'xxx', value: 'xxx'}
       }
     },
     methods: {
+      isSelected (key) {
+        if (this.mult) {
+          return this.selected.findIndex((val) => {
+            return val.value === key
+          }) > -1
+        }
+        return false;
+      },
       handleSelect (data) {
-        this.$emit('select', data)
+        if (!this.mult) {
+          this.$emit('select', {...data})
+        } else {
+          this.selected.push({...data})
+        }
+      },
+      handleUnselect (data) {
+        this.selected = this.selected.filters((val.key) => {
+          return val.key !== data.key
+        })
+      },
+      handleConfirm () {
+        this.$emit('select', this.selected);
+        this.selected = [];
       }
     }
   }
