@@ -1,5 +1,7 @@
 <template>
-  <li @click="handleClick">{{data.label}}</li>
+  <li @click="handleClick">
+    <a href="javascript:;">{{data.label}}</a>
+  </li>
 </template>
 
 <script>

@@ -1,7 +1,7 @@
 <template>
   <li @click="handleClick" :class="{selected: checked}">
     <input type="checkbox" v-if="mult" v-model="checked">
-    {{data.value}}
+    <a href="javascript:;">{{data.value}}</a>
   </li>
 </template>
 
@@ -16,9 +16,9 @@
       },
       mult: { // 是否多选，默认不是多选
         type: Boolean,
-        default: false 
+        default: false
       },
-      selected: { //是否是选中的
+      selected: { // 是否是选中的
         type: Boolean,
         default: false
       }
@@ -30,11 +30,11 @@
     },
     methods: {
       handleClick () {
-        this.checked = !this.checked;
+        this.checked = !this.checked
         if (this.checked) {
-          this.$emit('select', this.data);
+          this.$emit('select', this.data)
         } else {
-          this.$emit('unselect', this.data);
+          this.$emit('unselect', this.data)
         }
       }
     }

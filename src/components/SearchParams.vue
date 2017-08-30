@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div v-for="(item, key) in params" :key="key">
-      <span>{{item.label}}:{{item.display_value}}</span>
-      <span @click="handleDelete(key)">X</span>
+    <div class="search-current" v-for="(item, key) in params" :key="key">
+      <span class="title">{{item.label}}:</span>
+      <span class="content">{{item.display_value}}</span>
+      <span class="remove" @click="handleDelete(key)">X</span>
     </div>
   </div>
 </template>

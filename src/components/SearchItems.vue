@@ -1,5 +1,5 @@
 <template>
-  <ul v-show="status">
+  <ul class="search-ul" v-show="status">
     <search-item v-for="item in data" :data="item" @select="handleSelect" :key="item.name"></search-item>
   </ul>
 </template>

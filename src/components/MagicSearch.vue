@@ -1,15 +1,31 @@
 <template>
-  <div>
-    <SearchParams :params="params" @delete="handleParamDelete"></SearchParams>
-    <div>
-      <div><label><span v-show="currentSearchItem.label">{{currentSearchItem.label}}:</span><input ref="searchInput" @keyup.enter="handleInputEnter" @keyup.delete="handleInputDelete" @focus="handleInputFocus" @blur="handleInputBlur" v-model.trim="key"></label></div>
-      <SearchItems :status="status === 'KEY_STATUS'" :data="currentSearchItems" @select="handleSearchItemSelect"></SearchItems>
-      <Select v-show="showSelect" :mult="isMultSelect" :data="selectData" @select="handleSetSelectValue"></Select>
+  <div class="magic-search">
+    <div class="magic-search__inner">
+      <span class="magic-search__go">
+        <i>ic</i>
+      </span>
+      <div class="magic-search__main">
+        <div class="m-search">
+          <div class="m-search__area">
+            <SearchParams :params="params" @delete="handleParamDelete"></SearchParams>
+            <span class="search-selected"  v-show="currentSearchItem.label">{{currentSearchItem.label}}:</span>
+            <div class="search-entry">
+              <input class="search-input" placeholder="Click here for filters." ref="searchInput" @keyup.enter="handleInputEnter" @keyup.delete="handleInputDelete" @focus="handleInputFocus" @blur="handleInputBlur" v-model.trim="key">
+              <SearchItems :status="status === 'KEY_STATUS'" :data="currentSearchItems" @select="handleSearchItemSelect"></SearchItems>
+              <Select v-show="showSelect" :mult="isMultSelect" :data="selectData" @select="handleSetSelectValue"></Select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="magic-search__clear">
+				<i>c</i>
+			</span>
     </div>
   </div>
 </template>
 
 <script>
+  import '@/styles/magic-search.css'
   import SearchItems from './SearchItems'
   import SearchParams from './SearchParams'
   import Select from './select/Select'
@@ -19,7 +35,8 @@
   export default {
     components: {
       SearchItems,
-      SearchParams
+      SearchParams,
+      Select
     },
     props: {
       searchItems: {
@@ -34,8 +51,7 @@
         currentSearchItem: {},
         status: BLUR_STATUS, // 输入框的三种状态：blur状态，选择关键字状态，赋值状态
         showSelect: false,
-        isMultSelect: false,
-        selectData: {}
+        isMultSelect: false
       }
     },
     computed: {
@@ -43,9 +59,35 @@
         return this.searchItems.filter((item) => {
           return !this.params[item.name] || this.currentSearchItem.name && item.name !== this.currentSearchItem.name
         })
+      },
+      selectData () {
+        if (!this.currentSearchItem.name) {
+          return {}
+        }
+        if (!this.key) {
+          return {...this.currentSearchItem.options}
+        }
+        const type = this.currentSearchItem.type.toUpperCase()
+        if (type === 'SELECT' || type === 'MULT-SELECT') {
+          let result = {}
+          Object.keys().forEach(key => {
+            let val = this.currentSearchItem.options[key]
+            if (val.indexOf(this.key) > -1) {
+              result[key] = val
+            }
+          })
+          return result
+        }
+        return {}
       }
     },
     methods: {
+      _setSearchItemValue (name, val) {
+        this.$set(this.params, name, val) // 新增搜索参数
+        this.currentSearchItem = {} // 将当前赋值的搜索项置空
+        this.key = '' // 将输入框值设置为空
+        this.status = KEY_STATUS // 将状态这种为选择搜索项状态
+      },
       handleParamDelete (key) {
         this.$delete(this.params, key)
       },
@@ -58,15 +100,15 @@
       },
       handleInputEnter () {
         if (this.currentSearchItem.name && this.currentSearchItem.type.toUpperCase() === 'TEXT' && this.key) { // 如果是处于赋值状态，并且当前的搜索项是text类型，同时输入框又有值，那么就开始赋值
-          this.$set(this.params, this.currentSearchItem.name, {label: this.currentSearchItem.label, value: this.key, display_value: this.key}) // 新增搜索参数
-          this.currentSearchItem = {} // 将当前赋值的搜索项置空
-          this.key = '' // 将输入框值设置为空
-          this.status = KEY_STATUS // 将状态这种为选择搜索项状态
+          this._setSearchItemValue(this.currentSearchItem.name, {label: this.currentSearchItem.label, value: this.key, display_value: this.key})
         }
       },
       handleInputDelete () {
         if (!this.key && this.currentSearchItem.name) {
           this.currentSearchItem = {}
+          this.key = '' // 将输入框值设置为空
+          this.status = KEY_STATUS // 将状态这种为选择搜索项状态
+          this.showSelect = false
         }
       },
       handleInputBlur () {
@@ -78,20 +120,66 @@
       },
       handleSearchItemSelect (item) {
         this.currentSearchItem = {...item}
-        // TODO 处理赋值选项，根据type来判断是否展示下拉或者日历
         this.status = VALUE_STATUS // 将当前状态设置为赋值状态
         this.key = '' // 将输入框的值设置为空
         this.$refs.searchInput.focus() // 将输入框设置为focus状态
 
-        if (item.type.toUpperCase() === 'SELECT') {
-          this.showSelect = true;
-          this.selectData = this.currentSearchItem.options;
+        const type = item.type.toUpperCase()
+        if (type === 'SELECT') {
+          this.showSelect = true
+          this.isMultSelect = false
+        }
+        if (type === 'MULT-SELECT') {
+          this.showSelect = true
+          this.isMultSelect = true
         }
       },
 
       handleSetSelectValue (val) {
-
+        this.showSelect = false
+        if (this.isMultSelect) {
+          let value = []
+          let displayValue = []
+          val.forEach(item => {
+            value.push(item.key)
+            displayValue.push(item.value)
+          })
+          this._setSearchItemValue(this.currentSearchItem.name, {label: this.currentSearchItem.label, value: value.join(','), display_value: displayValue.join(',')})
+        } else {
+          this._setSearchItemValue(this.currentSearchItem.name, {label: this.currentSearchItem.label, value: val.key, display_value: val.value})
+        }
       }
     }
   }
 </script>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  .magic-search-bar {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+    font-size: 12px;
+  }
+  .magic-search-inner {
+    display: inline-flex;
+    width: 100%;
+    min-width: 0;
+  }
+  .magic-search-addon {
+    display: flex;
+    width: auto;
+    align-items: center;
+    padding: 0 16px;
+    line-height: 1;
+    color: #666;
+    cursor: pointer;
+  }
+</style>

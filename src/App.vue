@@ -24,12 +24,22 @@ export default {
         {
           name: 'status',
           label: '状态',
-          type: 'select'
+          type: 'mult-select',
+          options: {
+            active: '激活',
+            'delete': '删除',
+            offline: '下线',
+            'new': '新建'
+          }
         },
         {
           name: 'visibility',
           label: '是否可见',
-          type: 'select'
+          type: 'select',
+          options: {
+            ok: '是',
+            no: '否'
+          }
         },
         {
           name: 'min',

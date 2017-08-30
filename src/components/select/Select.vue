@@ -1,9 +1,9 @@
 <template>
   <div>
-    <ul>
-      <Option v-for="(value, key) in data" :data="{'key': key, 'value': value}" :mult="mult" :selected="isSelected(key)" @select="handleSelect" @unselect="handleUnselect"></Option>
+    <ul class="search-ul">
+      <Option v-for="(value, key) in data" :data="{'key': key, 'value': value}" :mult="mult" :selected="isSelected(key)" @select="handleSelect" @unselect="handleUnselect" :key="key"></Option>
     </ul>
-    <div>
+    <div v-show="mult">
       <button @click="handleConfirm">确认</button>
     </div>
   </div>
@@ -37,7 +37,7 @@
             return val.value === key
           }) > -1
         }
-        return false;
+        return false
       },
       handleSelect (data) {
         if (!this.mult) {
@@ -47,13 +47,16 @@
         }
       },
       handleUnselect (data) {
-        this.selected = this.selected.filters((val.key) => {
+        this.selected = this.selected.filters((val) => {
           return val.key !== data.key
         })
       },
       handleConfirm () {
-        this.$emit('select', this.selected);
-        this.selected = [];
+        if (this.selected.length < 1) {
+          return
+        }
+        this.$emit('select', this.selected)
+        this.selected = []
       }
     }
   }
