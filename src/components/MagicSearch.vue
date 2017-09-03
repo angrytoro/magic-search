@@ -11,7 +11,7 @@
             <span class="search-selected"  v-show="currentSearchItem.label">{{currentSearchItem.label}}:</span>
             <div class="search-entry">
               <input class="search-input" placeholder="Click here for filters." ref="searchInput" @keyup.enter="handleInputEnter" @keyup.delete="handleInputDelete" @focus="handleInputFocus" @blur="handleInputBlur" v-model.trim="key">
-              <SearchItems :status="status === 'KEY_STATUS'" :data="currentSearchItems" @select="handleSearchItemSelect"></SearchItems>
+              <SearchItems v-show="status === 'KEY_STATUS'" :data="currentSearchItems" @select="handleSearchItemSelect"></SearchItems>
               <Select v-show="showSelect" :mult="isMultSelect" :data="selectData" @select="handleSetSelectValue"></Select>
             </div>
           </div>
@@ -152,34 +152,3 @@
     }
   }
 </script>
-
-<style>
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  }
-  .magic-search-bar {
-    position: relative;
-    width: 100%;
-    margin-bottom: 15px;
-    font-size: 12px;
-  }
-  .magic-search-inner {
-    display: inline-flex;
-    width: 100%;
-    min-width: 0;
-  }
-  .magic-search-addon {
-    display: flex;
-    width: auto;
-    align-items: center;
-    padding: 0 16px;
-    line-height: 1;
-    color: #666;
-    cursor: pointer;
-  }
-</style>
