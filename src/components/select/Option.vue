@@ -1,6 +1,5 @@
 <template>
-  <li @click="handleClick" :class="{selected: checked}">
-    <input type="checkbox" v-if="mult" v-model="checked">
+  <li @click="handleClick">
     <a href="javascript:;">{{data.value}}</a>
   </li>
 </template>
@@ -13,10 +12,6 @@
         validator (item) {
           return item && item.key && item.value
         }
-      },
-      mult: { // 是否多选，默认不是多选
-        type: Boolean,
-        default: false
       },
       selected: { // 是否是选中的
         type: Boolean,
@@ -40,9 +35,3 @@
     }
   }
 </script>
-
-<style>
-  .selected {
-    background: red;
-  }
-</style>
