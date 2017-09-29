@@ -1,19 +1,20 @@
 <template>
   <div>
-    <ul class="search-ul">
-      <Option v-for="(value, key) in data" :data="{'key': key, 'value': value}" :selected="isSelected(key)" @select="handleSelect" @unselect="handleUnselect" :key="key"></Option>
+    <ul class="search-ul" :class="{'search-mult-ul' : ismult}">
+      <Selectoption v-for="(value, key) in data" :data="{'key': key, 'value': value}" :selected="isSelected(key)" @select="handleSelect" @unselect="handleUnselect" :key="key"></Selectoption>
+      <li v-if="mult" class="mult-select-btn"><button @click="handleConfirm">确认</button></li>
     </ul>
-    <div v-show="mult">
-      <button @click="handleConfirm">确认</button>
-    </div>
+    <!-- <div v-show="mult">
+      
+    </div> -->
   </div>
 </template>
 
 <script>
-  import Option from './Option'
+  import Selectoption from './Option'
   export default {
     components: {
-      Option
+      Selectoption
     },
     props: {
       data: {
@@ -27,7 +28,13 @@
     },
     data () {
       return {
+        ismult: this.mult,
         selected: []// 多选的时候需要用到,数组里面的对象是{key: 'xxx', value: 'xxx'}
+      }
+    },
+    watch: {
+      mult (value) {
+        this.ismult = value
       }
     },
     methods: {

@@ -12,12 +12,12 @@
             <div class="search-entry">
               <input class="search-input" placeholder="Click here for filters." ref="searchInput" @keyup.enter="handleInputEnter" @keyup.delete="handleInputDelete" @focus="handleInputFocus" @blur="handleInputBlur" v-model.trim="key">
               <SearchItems v-show="status === 'KEY_STATUS'" :data="currentSearchItems" @select="handleSearchItemSelect"></SearchItems>
-              <Select v-show="showSelect" :mult="isMultSelect" :data="selectData" @select="handleSetSelectValue"></Select>
+              <SelectCom v-show="showSelect" :mult="isMultSelect" :data="selectData" @select="handleSetSelectValue"></SelectCom>
             </div>
           </div>
         </div>
       </div>
-      <span class="magic-search__clear">
+      <span class="magic-search__clear"  title="清空" @click="clearSearchParams">
 				<i>c</i>
 			</span>
     </div>
@@ -28,7 +28,7 @@
   import '@/styles/magic-search.css'
   import SearchItems from './SearchItems'
   import SearchParams from './SearchParams'
-  import Select from './select/Select'
+  import SelectCom from './select/Select'
   const BLUR_STATUS = '' // blur状态
   const KEY_STATUS = 'KEY_STATUS' // 选择关键字状态
   const VALUE_STATUS = 'VALUE_STATUS' // 赋值状态
@@ -36,7 +36,7 @@
     components: {
       SearchItems,
       SearchParams,
-      Select
+      SelectCom
     },
     props: {
       searchItems: {
@@ -88,6 +88,10 @@
         this.key = '' // 将输入框值设置为空
         this.status = KEY_STATUS // 将状态这种为选择搜索项状态
       },
+      clearSearchParams () {
+        this.$set(this, 'params', {})
+        this.$set(this, 'currentSearchItem', {})
+      },
       handleParamDelete (key) {
         this.$delete(this.params, key)
       },
@@ -137,6 +141,7 @@
 
       handleSetSelectValue (val) {
         this.showSelect = false
+        this.$refs.searchInput.focus() // 将输入框设置为focus状态
         if (this.isMultSelect) {
           let value = []
           let displayValue = []

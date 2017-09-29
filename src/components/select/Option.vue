@@ -1,5 +1,5 @@
 <template>
-  <li @click="handleClick">
+  <li @click="handleClick" :class="{ selected: checked }">
     <a href="javascript:;">{{data.value}}</a>
   </li>
 </template>
